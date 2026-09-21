@@ -1,0 +1,140 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_videomarker/view
+
+    Example context (json):
+    {
+        Aqui tem que criar o context em inglês
+    }
+}}
+<div class="videomarker" id="videomarker-root"
+     data-cmid="{{cmid}}"
+     data-resume="{{resumeplayback}}"
+     data-lastposition="{{lastposition}}"
+     data-maxwatched="{{maxwatched}}"
+     data-allowseek="{{allowseek}}"
+     data-maxplaybackrate="{{maxplaybackrate}}">
+    <div class="videomarker-player-card">
+        <div class="videomarker-player" id="videomarker-player">
+            {{#html5}}
+                <video id="videomarker-html5" controls playsinline preload="metadata"
+                       {{#disabledownload}}controlslist="nodownload"{{/disabledownload}}
+                    {{#posterurl}}poster="{{{posterurl}}}"{{/posterurl}}>
+                    <source src="{{{videourl}}}">
+                </video>
+            {{/html5}}
+            {{#youtube}}
+                <div id="videomarker-youtube" data-videoid="{{youtubeid}}"></div>
+            {{/youtube}}
+            {{#vimeo}}
+                <iframe id="videomarker-vimeo" src="{{{vimeoembedurl}}}"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen title="{{activityname}}"></iframe>
+            {{/vimeo}}
+        </div>
+        <div class="videomarker-progress-row">
+            <span>{{#str}}watched, videomarker{{/str}}: <strong id="videomarker-progress-value">{{percentformatted}}
+                %</strong></span>
+            <span id="videomarker-time">00:00</span>
+        </div>
+        <div class="videomarker-progressbar" aria-hidden="true">
+            <span id="videomarker-progressbar-fill" style="width: {{percentformatted}}%"></span>
+        </div>
+        <div class="videomarker-timeline" id="videomarker-timeline" aria-label="{{#str}}timeline, videomarker{{/str}}">
+            {{#timeline}}
+                <button type="button"
+                        class="videomarker-timeline-mark {{#iscorrect}}is-correct{{/iscorrect}}{{^iscorrect}}is-incorrect{{/iscorrect}}"
+                        style="left: {{percent}}%" data-seek="{{time}}" title="{{label}}"></button>
+            {{/timeline}}
+        </div>
+    </div>
+
+    {{#intro}}
+        <div class="videomarker-intro">{{{intro}}}</div>
+    {{/intro}}
+
+    <div class="videomarker-questions">
+        {{^hasquestions}}
+            <div class="alert alert-info">{{#str}}noquestions, videomarker{{/str}}</div>
+        {{/hasquestions}}
+        {{#questions}}
+            <section class="videomarker-question {{#locked}}is-locked{{/locked}}" data-questionid="{{id}}"
+                     data-type="{{questiontype}}" data-requiredcount="{{requiredcount}}" data-locked="{{locked}}">
+                <div class="videomarker-question-header">
+                    <div>
+                        <span class="videomarker-question-number">{{number}}</span>
+                        {{#required}}<span class="badge bg-warning text-dark">{{#str}}
+                            questionrequired, videomarker{{/str}}</span>{{/required}}
+                        {{^required}}<span class="badge bg-secondary">{{#str}}
+                            questionoptional, videomarker{{/str}}</span>{{/required}}
+                    </div>
+                    <strong>{{pointsformatted}} {{#str}}points, videomarker{{/str}}</strong>
+                </div>
+                <div class="videomarker-question-text">{{{questionhtml}}}</div>
+                <div class="videomarker-answer-summary">
+                    <span><span data-role="selectedcount">0</span> / {{requiredcount}} {{#str}}
+                        markings, videomarker{{/str}}</span>
+                    {{#latest}}
+                        <span class="videomarker-latest-score">{{#str}}
+                            latestattempt, videomarker{{/str}}: {{scoreformatted}} / {{maxscoreformatted}}</span>
+                    {{/latest}}
+                </div>
+
+                {{#canattempt}}
+                    <div class="videomarker-marker-controls">
+                        {{#point}}
+                            <button type="button" class="btn btn-primary" data-action="mark-point"
+                                    {{#locked}}disabled{{/locked}}>
+                                {{#str}}markmoment, videomarker{{/str}}
+                            </button>
+                        {{/point}}
+                        {{#interval}}
+                            <button type="button" class="btn btn-primary" data-action="mark-interval"
+                                    {{#locked}}disabled{{/locked}}>
+                                <span data-role="interval-label">{{#str}}startinterval, videomarker{{/str}}</span>
+                            </button>
+                        {{/interval}}
+                        <button type="button" class="btn btn-success" data-action="submit" disabled>
+                            {{#str}}submitmarkers, videomarker{{/str}}
+                        </button>
+                    </div>
+                    <div class="videomarker-selected" data-role="selected"></div>
+                {{/canattempt}}
+
+                {{#latest}}
+                    <div class="videomarker-latest">
+                        <h5>{{#str}}latestattempt, videomarker{{/str}}</h5>
+                        <div class="videomarker-existing-marks">
+                            {{#marks}}
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        data-seek="{{starttime}}">
+                                    {{display}}
+                                    {{#iscorrect}}✓{{/iscorrect}}{{^iscorrect}}✕{{/iscorrect}}
+                                </button>
+                            {{/marks}}
+                        </div>
+                    </div>
+                {{/latest}}
+                {{#locked}}
+                    <div class="alert alert-secondary mt-2">{{#str}}answerlocked, videomarker{{/str}}</div>
+                {{/locked}}
+                <div class="videomarker-feedback" data-role="feedback" aria-live="polite"></div>
+            </section>
+        {{/questions}}
+    </div>
+</div>

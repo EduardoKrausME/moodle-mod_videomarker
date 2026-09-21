@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Video Marker">
+    <rect x="5" y="11" width="54" height="38" rx="6" fill="none" stroke="currentColor" stroke-width="4"/>
+    <path d="M27 22l15 8-15 8z" fill="currentColor"/>
+    <path d="M12 55h40" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="23" cy="55" r="5" fill="currentColor"/>
+    <circle cx="42" cy="55" r="5" fill="currentColor"/>
+</svg>
