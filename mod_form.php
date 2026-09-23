@@ -42,7 +42,7 @@ class mod_videomarker_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $this->standard_intro_elements();
 
-        $mform->addElement('header', 'sourceheader', get_string('sourceheader', 'videomarker'));
+        $mform->addElement('html', '<h3>' . get_string('sourceheader', 'videomarker') . '</h3>');
         $mform->addElement('select', 'videosource', get_string('videosource', 'videomarker'), video_source::options());
         $mform->setDefault('videosource', 'url');
         $mform->setType('videosource', PARAM_ALPHA);
@@ -60,19 +60,17 @@ class mod_videomarker_mod_form extends moodleform_mod {
 
         $mform->addElement('filemanager', 'videofile', get_string('videofile', 'videomarker'), null, [
             'subdirs' => 0,
-            'maxfiles' => 1,
             'accepted_types' => ['video'],
         ]);
         $mform->hideIf('videofile', 'videosource', 'neq', 'upload');
 
         $mform->addElement('filemanager', 'poster', get_string('poster', 'videomarker'), null, [
             'subdirs' => 0,
-            'maxfiles' => 1,
             'accepted_types' => ['image'],
         ]);
         $mform->hideIf('poster', 'videosource', 'in', ['youtube', 'vimeo']);
 
-        $mform->addElement('header', 'playbackheader', get_string('playbackheader', 'videomarker'));
+        $mform->addElement('html', '<h3>' . get_string('playbackheader', 'videomarker') . '</h3>');
         $mform->addElement('select', 'resumeplayback', get_string('resumeplayback', 'videomarker'), [
             1 => get_string('resumeautomatic', 'videomarker'),
             0 => get_string('resumefromstart', 'videomarker'),
@@ -122,6 +120,15 @@ class mod_videomarker_mod_form extends moodleform_mod {
             $percent = (int)$data[$percentfield];
             if ($percent < 1 || $percent > 100) {
                 $errors[$percentfield] = get_string('errorpercent', 'videomarker');
+            }
+        }
+        foreach (['videofile', 'poster'] as $field) {
+            $draftid = (int)($data[$field] ?? 0);
+            if ($draftid > 0) {
+                $draftinfo = file_get_draft_area_info($draftid);
+                if ((int)$draftinfo['filecount'] > 1) {
+                    $errors[$field] = get_string('errormaxfiles', 'videomarker');
+                }
             }
         }
         return $errors;

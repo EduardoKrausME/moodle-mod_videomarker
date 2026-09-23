@@ -347,7 +347,7 @@ function videomarker_reset_userdata(stdClass $data): array {
  * @return void
  */
 function videomarker_reset_course_form_definition(&$mform): void {
-    $mform->addElement('header', 'videomarkerheader', get_string('modulenameplural', 'videomarker'));
+    $mform->addElement('html', '<h3>' . get_string('modulenameplural', 'videomarker') . '</h3>');
     $mform->addElement('advcheckbox', 'reset_videomarker_attempts', get_string('resetuserdata', 'videomarker'));
 }
 
