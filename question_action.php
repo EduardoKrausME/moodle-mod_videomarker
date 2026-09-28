@@ -35,12 +35,42 @@ require_login($course, true, $cm);
 require_capability('mod/videomarker:managequestions', $context);
 require_sesskey();
 
+$PAGE->set_url('/mod/videomarker/question_action.php', [
+    'id' => $cm->id,
+    'qid' => $qid,
+    'action' => $action,
+]);
+$PAGE->set_title(get_string('managequestions', 'videomarker'));
+$PAGE->set_heading($course->fullname);
+
 $question = $DB->get_record('videomarker_questions', [
     'id' => $qid,
     'videomarkerid' => $activity->id,
 ], '*', MUST_EXIST);
 
 if ($action === 'delete') {
+    $confirm = optional_param('confirm', false, PARAM_BOOL);
+    if (!$confirm) {
+        $confirmurl = new moodle_url('/mod/videomarker/question_action.php', [
+            'id' => $cm->id,
+            'qid' => $question->id,
+            'action' => 'delete',
+            'confirm' => 1,
+            'sesskey' => sesskey(),
+        ]);
+        $cancelurl = new moodle_url('/mod/videomarker/questions.php', ['id' => $cm->id]);
+
+        echo $OUTPUT->header();
+        echo $OUTPUT->heading(format_string($activity->name));
+        echo $OUTPUT->confirm(
+            get_string('deletequestionconfirm', 'videomarker'),
+            $confirmurl,
+            $cancelurl
+        );
+        echo $OUTPUT->footer();
+        exit;
+    }
+
     \mod_videomarker\marker_manager::delete_question((int)$question->id, (int)$activity->id);
 } else if ($action === 'up') {
     \mod_videomarker\marker_manager::move_question((int)$question->id, (int)$activity->id, -1);
