@@ -26,7 +26,9 @@ namespace mod_videomarker\privacy;
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\transform;
 use core_privacy\local\request\writer;
 
@@ -35,7 +37,8 @@ use core_privacy\local\request\writer;
  */
 class provider implements
     \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\plugin\provider {
+    \core_privacy\local\request\plugin\provider,
+    \core_privacy\local\request\core_userlist_provider {
 
     /**
      * get_metadata
@@ -89,6 +92,39 @@ class provider implements
             'auserid' => $userid,
         ]);
         return $contextlist;
+    }
+
+    /**
+     * Get users who have data in the supplied activity context.
+     *
+     * @param userlist $userlist
+     * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public static function get_users_in_context(userlist $userlist): void {
+        $context = $userlist->get_context();
+        if (!$context instanceof \context_module) {
+            return;
+        }
+
+        $cm = get_coursemodule_from_id('videomarker', $context->instanceid, 0, false, IGNORE_MISSING);
+        if (!$cm) {
+            return;
+        }
+
+        $sql = "SELECT userid
+                  FROM {videomarker_progress}
+                 WHERE videomarkerid = :progressactivity
+                 UNION
+                SELECT userid
+                  FROM {videomarker_attempts}
+                 WHERE videomarkerid = :attemptactivity";
+
+        $userlist->add_from_sql('userid', $sql, [
+            'progressactivity' => $cm->instance,
+            'attemptactivity' => $cm->instance,
+        ]);
     }
 
     /**
@@ -205,6 +241,42 @@ class provider implements
             $DB->delete_records('videomarker_attempts', ['videomarkerid' => $cm->instance, 'userid' => $userid]);
             $DB->delete_records('videomarker_progress', ['videomarkerid' => $cm->instance, 'userid' => $userid]);
         }
+    }
+
+    /**
+     * Delete data for the approved users in the supplied activity context.
+     *
+     * @param approved_userlist $userlist
+     * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public static function delete_data_for_users(approved_userlist $userlist): void {
+        global $DB;
+
+        $context = $userlist->get_context();
+        if (!$context instanceof \context_module) {
+            return;
+        }
+
+        $cm = get_coursemodule_from_id('videomarker', $context->instanceid, 0, false, IGNORE_MISSING);
+        if (!$cm) {
+            return;
+        }
+
+        $userids = $userlist->get_userids();
+        if (!$userids) {
+            return;
+        }
+
+        [$usersql, $userparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'userid');
+        $params = ['activity' => $cm->instance] + $userparams;
+        $select = "videomarkerid = :activity AND userid {$usersql}";
+
+        $attemptids = $DB->get_fieldset_select('videomarker_attempts', 'id', $select, $params);
+        self::delete_marks_for_attempts($attemptids);
+        $DB->delete_records_select('videomarker_attempts', $select, $params);
+        $DB->delete_records_select('videomarker_progress', $select, $params);
     }
 
     /**
