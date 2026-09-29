@@ -37,12 +37,20 @@ class answer_submitted extends \core\event\base {
         $this->data['objecttable'] = 'videomarker_attempts';
     }
 
-    /** @return string Event name. */
+    /**
+     * Returns the event name.
+     *
+     * @return string Event name.
+     */
     public static function get_name(): string {
         return get_string('eventanswersubmitted', 'videomarker');
     }
 
-    /** @return string Event description. */
+    /**
+     * Returns the event description.
+     *
+     * @return string Event description.
+     */
     public function get_description(): string {
         return "The user with id '{$this->userid}' submitted Video Marker question '{$this->other['questionid']}' " .
             "in course module '{$this->contextinstanceid}'.";

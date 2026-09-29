@@ -31,7 +31,11 @@ use mod_videomarker\marker_manager;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class save_answer extends external_api {
-    /** @return external_function_parameters Parameters definition. */
+    /**
+     * Returns the parameters accepted by the external function.
+     *
+     * @return external_function_parameters Parameters definition.
+     */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'cmid' => new external_value(PARAM_INT, 'Course module id'),
@@ -103,7 +107,11 @@ class save_answer extends external_api {
         ];
     }
 
-    /** @return external_single_structure Return definition. */
+    /**
+     * Returns the structure returned by the external function.
+     *
+     * @return external_single_structure Return definition.
+     */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'attemptid' => new external_value(PARAM_INT, 'Attempt id'),

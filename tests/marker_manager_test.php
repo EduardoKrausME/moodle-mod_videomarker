@@ -27,6 +27,7 @@ namespace mod_videomarker;
 /**
  * Unit tests for timecode and target parsing.
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(marker_manager::class)]
 final class marker_manager_test extends \advanced_testcase {
     /**
      * Tests common video timecodes.

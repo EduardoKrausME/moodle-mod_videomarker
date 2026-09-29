@@ -37,7 +37,11 @@ class course_module_viewed extends \core\event\course_module_viewed {
         $this->data['objecttable'] = 'videomarker';
     }
 
-    /** @return string Event name. */
+    /**
+     * Returns the event name.
+     *
+     * @return string Event name.
+     */
     public static function get_name(): string {
         return get_string('eventcoursemoduleviewed', 'videomarker');
     }
