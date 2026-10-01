@@ -36,6 +36,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 final class marker_manager_test extends advanced_testcase {
     /**
      * Tests common video timecodes.
+     *
+     * @covers \\mod_videomarker\\marker_manager::parse_timecode
      */
     public function test_parse_timecode(): void {
         $this->assertSame(218.0, marker_manager::parse_timecode('03:38'));
@@ -46,6 +48,8 @@ final class marker_manager_test extends advanced_testcase {
 
     /**
      * Tests point windows and multiple expected markers.
+     *
+     * @covers \\mod_videomarker\\marker_manager::parse_targets
      */
     public function test_parse_point_targets(): void {
         $targets = marker_manager::parse_targets("03:38-03:47\n08:10-08:20", 'point');
@@ -56,6 +60,8 @@ final class marker_manager_test extends advanced_testcase {
 
     /**
      * Tests interval questions require a complete interval.
+     *
+     * @covers \\mod_videomarker\\marker_manager::parse_targets
      */
     public function test_interval_requires_end(): void {
         $this->assertNull(marker_manager::parse_targets('08:10', 'interval'));
