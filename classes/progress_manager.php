@@ -71,10 +71,10 @@ class progress_manager {
     public static function update(
         stdClass $activity,
         int $userid,
-        float    $duration,
-        float    $currenttime,
-        float    $segmentstart,
-        float    $segmentend
+        float $duration,
+        float $currenttime,
+        float $segmentstart,
+        float $segmentend
     ): stdClass {
         global $DB;
 
