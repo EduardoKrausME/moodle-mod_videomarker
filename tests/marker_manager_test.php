@@ -29,6 +29,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Unit tests for timecode and target parsing.
+ *
+ * @covers \mod_videomarker\marker_manager
  */
 #[CoversClass(marker_manager::class)]
 final class marker_manager_test extends advanced_testcase {
