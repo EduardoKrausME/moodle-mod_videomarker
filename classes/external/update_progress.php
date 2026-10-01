@@ -56,7 +56,7 @@ class update_progress extends external_api {
      * @param float $segmentend Segment end.
      * @return array Progress payload.
      */
-    public static function execute(int   $cmid, float $duration, float $currenttime,
+    public static function execute(int $cmid, float $duration, float $currenttime,
                                    float $segmentstart, float $segmentend): array {
         global $DB, $USER;
 
