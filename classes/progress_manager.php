@@ -70,7 +70,7 @@ class progress_manager {
      */
     public static function update(
         stdClass $activity,
-        int      $userid,
+        int $userid,
         float    $duration,
         float    $currenttime,
         float    $segmentstart,
