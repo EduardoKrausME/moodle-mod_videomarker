@@ -2,33 +2,28 @@
 
 Video Marker is a Moodle activity for asking students to identify exact moments or intervals inside a video.
 
-It is designed from the same concepts used by `mod_videoprogress`: protected upload support, URL/YouTube/Vimeo sources,
-resume playback, real watched-time tracking, gradebook integration, custom completion, reports, and a timeline-oriented
-student experience.
+Teachers can create point questions such as “Mark when the first security failure occurs” or interval questions such as
+“Mark the complete segment where the incorrect procedure occurs”. Point answers can use a correctness window, while
+interval answers use expected start/end boundaries with configurable tolerance. A question can require one or several
+markers.
 
-Teachers create point questions such as “Mark when the first security failure occurs” or interval questions such as
-“Mark the complete segment where the incorrect procedure occurs”. Expected point answers can be correctness windows (for
-example 03:38–03:47). Interval answers use expected start/end boundaries with a configurable tolerance. A question can
-require one or several markers.
+## How it works
 
-The activity records attempts, correct and incorrect markers, temporal distance from the expected target, grade, watched
-percentage, and required-question completion. Retry and feedback behavior are configurable per question.
+The learner watches the video and places markers directly on the timeline. The activity compares those markers with the
+expected moments configured by the teacher and records correct and incorrect answers, temporal distance from the target,
+grade, watched percentage and required-question completion.
 
-Supported video sources:
+Retry and feedback behaviour can be configured per question, while resume playback and watched-time tracking let the
+learner continue from where they stopped.
 
-- Moodle protected upload;
+## Video sources
+
+- protected Moodle upload;
 - direct video URL;
 - YouTube;
 - Vimeo.
 
-## Installation
+## Teacher view
 
-Copy the `videomarker` directory to `mod/videomarker` and complete the Moodle upgrade process.
-
-## Requirements
-
-Moodle 4.5 or later.
-
-## License
-
-GNU GPL v3 or later.
+Teachers can review attempts, marker accuracy, grades, watched percentage and completion, which makes the activity useful
+for exercises where recognising *when* something happens is part of the learning objective.
