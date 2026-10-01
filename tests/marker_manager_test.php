@@ -24,11 +24,14 @@
 
 namespace mod_videomarker;
 
+use advanced_testcase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
 /**
  * Unit tests for timecode and target parsing.
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(marker_manager::class)]
-final class marker_manager_test extends \advanced_testcase {
+#[CoversClass(marker_manager::class)]
+final class marker_manager_test extends advanced_testcase {
     /**
      * Tests common video timecodes.
      */

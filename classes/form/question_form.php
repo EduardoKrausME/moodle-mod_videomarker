@@ -25,11 +25,12 @@
 namespace mod_videomarker\form;
 
 use mod_videomarker\marker_manager;
+use moodleform;
 
 /**
  * Form used by teachers to create and edit marker questions.
  */
-class question_form extends \moodleform {
+class question_form extends moodleform {
     /**
      * Defines form fields.
      */

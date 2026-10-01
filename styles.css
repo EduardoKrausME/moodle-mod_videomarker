@@ -175,6 +175,7 @@
         flex-direction: column;
     }
 }
+
 /* Let the activity and its main player use all available Moodle content width. */
 .videomarker {
     width: 100%;

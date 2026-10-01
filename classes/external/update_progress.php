@@ -16,6 +16,7 @@
 
 namespace mod_videomarker\external;
 
+use context_module;
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
@@ -55,7 +56,7 @@ class update_progress extends external_api {
      * @param float $segmentend Segment end.
      * @return array Progress payload.
      */
-    public static function execute(int $cmid, float $duration, float $currenttime,
+    public static function execute(int   $cmid, float $duration, float $currenttime,
                                    float $segmentstart, float $segmentend): array {
         global $DB, $USER;
 
@@ -68,7 +69,7 @@ class update_progress extends external_api {
         ]);
 
         $cm = get_coursemodule_from_id('videomarker', $params['cmid'], 0, false, MUST_EXIST);
-        $context = \context_module::instance($cm->id);
+        $context = context_module::instance($cm->id);
         self::validate_context($context);
         require_capability('mod/videomarker:attempt', $context);
         $activity = $DB->get_record('videomarker', ['id' => $cm->instance], '*', MUST_EXIST);

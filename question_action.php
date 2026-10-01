@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_videomarker\marker_manager;
+
 require_once(__DIR__ . '/../../config.php');
 
 $id = required_param('id', PARAM_INT);
@@ -41,10 +43,10 @@ $question = $DB->get_record('videomarker_questions', [
 ], '*', MUST_EXIST);
 
 if ($action === 'delete') {
-    \mod_videomarker\marker_manager::delete_question((int)$question->id, (int)$activity->id);
+    marker_manager::delete_question((int)$question->id, (int)$activity->id);
 } else if ($action === 'up') {
-    \mod_videomarker\marker_manager::move_question((int)$question->id, (int)$activity->id, -1);
+    marker_manager::move_question((int)$question->id, (int)$activity->id, -1);
 } else if ($action === 'down') {
-    \mod_videomarker\marker_manager::move_question((int)$question->id, (int)$activity->id, 1);
+    marker_manager::move_question((int)$question->id, (int)$activity->id, 1);
 }
 redirect(new moodle_url('/mod/videomarker/questions.php', ['id' => $cm->id]));

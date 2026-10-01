@@ -24,11 +24,15 @@
 
 namespace mod_videomarker\privacy;
 
+use coding_exception;
+use context;
+use context_module;
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\transform;
 use core_privacy\local\request\writer;
+use dml_exception;
 
 /**
  * Privacy provider for Video Marker.
@@ -96,15 +100,15 @@ class provider implements
      *
      * @param approved_contextlist $contextlist
      * @return void
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function export_user_data(approved_contextlist $contextlist): void {
         global $DB;
 
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
-            if (!$context instanceof \context_module) {
+            if (!$context instanceof context_module) {
                 continue;
             }
             $cm = get_coursemodule_from_id('videomarker', $context->instanceid, 0, false, IGNORE_MISSING);
@@ -158,15 +162,15 @@ class provider implements
     /**
      * delete_data_for_all_users_in_context
      *
-     * @param \context $context
+     * @param context $context
      * @return void
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
-    public static function delete_data_for_all_users_in_context(\context $context): void {
+    public static function delete_data_for_all_users_in_context(context $context): void {
         global $DB;
 
-        if (!$context instanceof \context_module) {
+        if (!$context instanceof context_module) {
             return;
         }
         $cm = get_coursemodule_from_id('videomarker', $context->instanceid, 0, false, IGNORE_MISSING);
@@ -184,15 +188,15 @@ class provider implements
      *
      * @param approved_contextlist $contextlist
      * @return void
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function delete_data_for_user(approved_contextlist $contextlist): void {
         global $DB;
 
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
-            if (!$context instanceof \context_module) {
+            if (!$context instanceof context_module) {
                 continue;
             }
             $cm = get_coursemodule_from_id('videomarker', $context->instanceid, 0, false, IGNORE_MISSING);
@@ -212,8 +216,8 @@ class provider implements
      *
      * @param array $attemptids
      * @return void
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     private static function delete_marks_for_attempts(array $attemptids): void {
         global $DB;

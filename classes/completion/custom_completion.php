@@ -16,6 +16,7 @@
 
 namespace mod_videomarker\completion;
 
+use coding_exception;
 use core_completion\activity_custom_completion;
 use core_completion\cm_completion_details;
 use mod_videomarker\marker_manager;
@@ -57,7 +58,7 @@ class custom_completion extends activity_custom_completion {
                 return $status['answered'] >= $status['total'] ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
 
             default:
-                throw new \coding_exception('Unknown completion rule: ' . $rule);
+                throw new coding_exception('Unknown completion rule: ' . $rule);
         }
     }
 

@@ -22,6 +22,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_videomarker\event\course_module_viewed;
+use mod_videomarker\marker_manager;
+use mod_videomarker\progress_manager;
+use mod_videomarker\video_source;
+
 require_once(__DIR__ . '/../../config.php');
 
 $id = required_param('id', PARAM_INT);
@@ -39,7 +44,7 @@ $PAGE->set_heading($course->fullname);
 $PAGE->set_activity_record($activity);
 $PAGE->requires->js_call_amd('mod_videomarker/player', 'init');
 
-$event = \mod_videomarker\event\course_module_viewed::create([
+$event = course_module_viewed::create([
     'objectid' => $activity->id,
     'context' => $context,
 ]);
@@ -51,20 +56,20 @@ $event->trigger();
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-$player = \mod_videomarker\video_source::player_context($activity, $context);
-$progress = \mod_videomarker\progress_manager::get((int)$activity->id, (int)$USER->id);
+$player = video_source::player_context($activity, $context);
+$progress = progress_manager::get((int)$activity->id, (int)$USER->id);
 $canattempt = has_capability('mod/videomarker:attempt', $context);
 $questions = [];
 $timeline = [];
-foreach (array_values(\mod_videomarker\marker_manager::questions((int)$activity->id)) as $index => $question) {
-    $targets = \mod_videomarker\marker_manager::targets((int)$question->id);
-    $latest = \mod_videomarker\marker_manager::latest_attempt((int)$question->id, (int)$USER->id);
+foreach (array_values(marker_manager::questions((int)$activity->id)) as $index => $question) {
+    $targets = marker_manager::targets((int)$question->id);
+    $latest = marker_manager::latest_attempt((int)$question->id, (int)$USER->id);
     $marks = [];
     if ($latest) {
-        foreach (\mod_videomarker\marker_manager::attempt_marks((int)$latest->id) as $mark) {
-            $display = \mod_videomarker\marker_manager::format_time((float)$mark->starttime);
+        foreach (marker_manager::attempt_marks((int)$latest->id) as $mark) {
+            $display = marker_manager::format_time((float)$mark->starttime);
             if ($mark->endtime !== null) {
-                $display .= ' – ' . \mod_videomarker\marker_manager::format_time((float)$mark->endtime);
+                $display .= ' – ' . marker_manager::format_time((float)$mark->endtime);
             }
             $marks[] = [
                 'starttime' => (float)$mark->starttime,
@@ -110,7 +115,7 @@ $data = array_merge($player, [
     'allowseek' => (int)$activity->allowseek,
     'maxplaybackrate' => (float)$activity->maxplaybackrate,
     'lastposition' => (float)$progress->lastposition,
-    'maxwatched' => \mod_videomarker\progress_manager::max_watched($progress),
+    'maxwatched' => progress_manager::max_watched($progress),
     'percentformatted' => format_float($progress->percent, 1),
     'questions' => $questions,
     'hasquestions' => (bool)$questions,

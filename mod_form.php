@@ -16,9 +16,9 @@
 
 use mod_videomarker\video_source;
 
-defined('MOODLE_INTERNAL') || die();
-
 global $CFG;
+defined('MOODLE_INTERNAL') || die;
+
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
 /**

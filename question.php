@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_videomarker\form\question_form;
+use mod_videomarker\marker_manager;
+
 require_once(__DIR__ . '/../../config.php');
 require_once("{$CFG->libdir}/formslib.php");
 
@@ -39,7 +42,7 @@ $PAGE->set_url('/mod/videomarker/question.php', ['cmid' => $cmid, 'qid' => $qid]
 $PAGE->set_title($qid ? get_string('editquestion', 'videomarker') : get_string('addquestion', 'videomarker'));
 $PAGE->set_heading($course->fullname);
 
-$form = new \mod_videomarker\form\question_form(null, ['cmid' => $cmid]);
+$form = new question_form(null, ['cmid' => $cmid]);
 if ($form->is_cancelled()) {
     redirect(new moodle_url('/mod/videomarker/questions.php', ['id' => $cmid]));
 }
@@ -47,7 +50,7 @@ if ($data = $form->get_data()) {
     $editor = $data->questiontext_editor;
     $data->questiontext = (string)$editor['text'];
     $data->questiontextformat = (int)$editor['format'];
-    \mod_videomarker\marker_manager::save_question($data, (int)$activity->id);
+    marker_manager::save_question($data, (int)$activity->id);
     redirect(new moodle_url('/mod/videomarker/questions.php', ['id' => $cmid]), get_string('changessaved'));
 }
 
@@ -62,8 +65,8 @@ if ($qid) {
         'format' => $question->questiontextformat,
         'itemid' => 0,
     ];
-    $question->targets = \mod_videomarker\marker_manager::targets_to_text(
-        \mod_videomarker\marker_manager::targets((int)$question->id)
+    $question->targets = marker_manager::targets_to_text(
+        marker_manager::targets((int)$question->id)
     );
     $form->set_data($question);
 }

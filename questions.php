@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_videomarker\marker_manager;
+
 require_once(__DIR__ . '/../../config.php');
 
 $id = required_param('id', PARAM_INT);
@@ -37,7 +39,7 @@ $PAGE->set_url('/mod/videomarker/questions.php', ['id' => $cm->id]);
 $PAGE->set_title(get_string('managequestions', 'videomarker'));
 $PAGE->set_heading($course->fullname);
 
-$questions = array_values(\mod_videomarker\marker_manager::questions((int)$activity->id));
+$questions = array_values(marker_manager::questions((int)$activity->id));
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($activity->name));

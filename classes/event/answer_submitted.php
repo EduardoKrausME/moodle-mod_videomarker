@@ -24,10 +24,12 @@
 
 namespace mod_videomarker\event;
 
+use core\event\base;
+
 /**
  * Event emitted when a student submits a marker answer.
  */
-class answer_submitted extends \core\event\base {
+class answer_submitted extends base {
     /**
      * Initialises event metadata.
      */

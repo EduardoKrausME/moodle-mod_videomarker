@@ -16,12 +16,14 @@
 
 namespace mod_videomarker\external;
 
+use context_module;
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
 use mod_videomarker\event\answer_submitted;
 use mod_videomarker\marker_manager;
+use moodle_exception;
 
 /**
  * AJAX service used to submit timestamp and interval answers.
@@ -62,19 +64,19 @@ class save_answer extends external_api {
         ]);
 
         $cm = get_coursemodule_from_id('videomarker', $params['cmid'], 0, false, MUST_EXIST);
-        $context = \context_module::instance($cm->id);
+        $context = context_module::instance($cm->id);
         self::validate_context($context);
         require_capability('mod/videomarker:attempt', $context);
 
         $activity = $DB->get_record('videomarker', ['id' => $cm->instance], '*', MUST_EXIST);
         $question = $DB->get_record('videomarker_questions', ['id' => $params['questionid']], '*', MUST_EXIST);
         if ((int)$question->videomarkerid !== (int)$activity->id) {
-            throw new \moodle_exception('invalidquestion', 'videomarker');
+            throw new moodle_exception('invalidquestion', 'videomarker');
         }
 
         $marks = json_decode($params['marksjson'], true);
         if (!is_array($marks)) {
-            throw new \moodle_exception('invalidmarkdata', 'videomarker');
+            throw new moodle_exception('invalidmarkdata', 'videomarker');
         }
 
         $result = (new marker_manager())->submit_attempt($activity, $question, (int)$USER->id, $marks);
