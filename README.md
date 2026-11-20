@@ -1,4 +1,4 @@
-# Video Marker — mod_videomarker
+# Video Marker - mod_videomarker
 
 Video Marker is a Moodle activity for asking students to identify exact moments or intervals inside a video.
 
